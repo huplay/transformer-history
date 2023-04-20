@@ -20,10 +20,6 @@ https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
 
 Hinton és Yann Le Cun a mai napig a terület legnagyobb szaktekitélyei, számtalan eredménnyel járultak hozzá a terület fejlődéséhez. Önállóan, illetve tanítványaikat segítve is. Yoshua Bengio-val együtt 2018-ban ők kapták a Turing-díjat, amelyet a számítástechnika Nobel-díjaként is aposztrofálnak. (1 millió dollár a jutalom. Hármukat szokás a Deep Learning keresztapjaiként, vagy a három muskétásként nevezni.)
 
-Yann Le Cun 1986 (az eredeti 1985-ös francia publikáció angol változata): https://link.springer.com/chapter/10.1007/978-94-011-0770-9_2
-
-Rumelhart, Hinton és Williams tanulmánya, 1986: http://www.cs.toronto.edu/~hinton/absps/naturebp.pdf
-
 A backpropagation algoritmus működése röviden a következő. Először is meghatározzuk az eltérést egy adott bemenetre adott válasz, illetve az ideálisnak tartott érték között. Ezt az eltérést, vagyis a hibát pedig a hálózaton hátulról előlre végigfuttatjuk. (Ezért hívják backpropagation-nek, vagyis visszafelé terjesztésnek.) Tulajdonképpen meghatározzuk, hogy milyen értéknek kellett volna lennie az előző lépésben ahhoz, hogy a kívánt eredményt kapjuk. És minden paramétert egy icipicit ebbe az irányba léptetjük. És persze ezt ismételjük újra és újra.
  
 A 80-as évek számítógépei azonban nem rendelkeztek kellően nagy számítási teljesítménnyel, és a betanításhoz szükséges hatalmas adatmennyiség sem állt rendelkezésre, így gyakorlati eredményre egészen 1993-ig kellett várni, mikor egy mintafelismerési versenyen nyert egy neurális hálózatot használó program. Ne feledjük, hogy a web is csak ekkoriban jött létre (1991-ben), és használata csak az 1990-es évek közepére terjedt el. (Én 1996-ban még nem láttam élőben internetet, pedig ebben az évben végeztem a főiskolán informatika szakirányon.) Ekkoriban nem léteztek nagy szöveges adatbázisok, nem volt fenn minden könyv vagy publikáció a neten. Alig voltak hírportálok, a szociális platformok, mint például a Facebook csak később jöttek létre.

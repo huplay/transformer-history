@@ -2,12 +2,12 @@
 
 Azt már az 1800-as évek legvégén felismerték, hogy agyunkban neuronsejtek hálózata található, melyek elektromos jeleket továbbítanak egymásnak. A 20. század első felében ennek felépítéséről egyre több részletet derítettek ki, így hamarosan felmerült, hogy ezt leutánozva akár gondolkodásra képes gépeket is készíthetnénk.
 
-Az első elméleti modellt már 1943-ban megalkották, ez volt a perceptron. (McCullogh és Pitts) Ekkor még a legelső számítógép is csak tervezési fázisban volt, két évvel később készült el, így érthető, hogy a perceptron az elméletileg elképzelhető legegyszerűbb modell volt, hogy legyen esély közeli megvalósítására. Annak analógiájára, hogy tüzel-e a neuronsejt vagy sem, a perceptron kimenetén kétféle érték jelenhetett meg (0 vagy 1). Ahogy sejtjeink esetén is, minden perceptron sok bemenettel rendelkezett, mely vagy kívülről hozott be egy értéket (bemeneti neuron), vagy egy másik perceptron kimenetéről jött, így ezek az értékek is 0-ák vagy 1-ek lehettek. A perceptron maga annyit csinált, hogy megszámolta, hogy hány bemenetén érkezett 1 (vagy másképp nézve összeadta a számokat), és ha ez elért egy bizonyos küszöbértéket, akkor kimenetén 1 lett, különben 0.
+Az első elméleti modellt már 1943-ban megalkották, ez volt a perceptron. (McCulloch és Pitts) Ekkor még a legelső számítógép is csak tervezési fázisban volt, két évvel később készült el, így érthető, hogy a perceptron az elméletileg elképzelhető legegyszerűbb modell volt, hogy legyen esély közeli megvalósítására. Annak analógiájára, hogy tüzel-e a neuronsejt vagy sem, a perceptron kimenetén kétféle érték jelenhetett meg (0 vagy 1). Ahogy sejtjeink esetén is, minden perceptron sok bemenettel rendelkezett, mely vagy kívülről hozott be egy értéket (bemeneti neuron), vagy egy másik perceptron kimenetéről jött, így ezek az értékek is 0-ák vagy 1-ek lehettek. A perceptron maga annyit csinált, hogy megszámolta, hogy hány bemenetén érkezett 1 (vagy másképp nézve összeadta a számokat), és ha ez elért egy bizonyos küszöbértéket, akkor kimenetén 1 lett, különben 0.
 https://en.wikipedia.org/wiki/Perceptron
 
 | <img src="images/Pitts_McCullogh_1949.png" height="300" /> | <img src="images/perceptron.png" height="300" />  |
 |:----------------------------------------------------------:|:-------------------------------------------------:|
-|   Walter Pitts és Warren Sturgis McCullogh (1949 körül)    |                    Perceptron                     |
+|   Walter Pitts és Warren Sturgis McCulloch (1949 körül)    |                    Perceptron                     |
 
 Természetesen a rendszert be kellett valahogy hangolni, ami ezeknek a küszöbértékeknek a megtalálásából állt. Ezek voltak a paraméterek. (Ennél a modellnél annyi darab paraméter volt, ahány neuron.)
  
