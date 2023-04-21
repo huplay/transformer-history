@@ -1,6 +1,6 @@
 # 3. Visszacsatolásos hálózatok #
 
-Az első részben bemutattam a neurális hálózatok kutatásának korai időszakát. A másodikban a backpropagation betanítási algoritmusról volt szó. Most a visszacsatolásos hálózatokról lesz szó.
+Az első részben bemutattam a neurális hálózatok kutatásának korai időszakát. A másodikban a backpropagation betanítási algoritmusról volt szó. Most a visszacsatolásos hálózatok következnek.
 
 Akkor nevezünk egy hálózatot visszacsatolásosnak, ha egy neuron kimenetén megjelenő érték visszakerülhet a bemenetére. (Vagy közvetlenül, vagy más neuronok által módosított értékkel.) Tehát a neuronok összeköttetésében hurkok találhatók, nem csak simán előre irányú haladás. (A hurkok nélküli hálózatokat előrecsatolásos, vagyis feed forward hálózatoknak nevezik, rövidítve FFN. A visszacsatolásos neve angolul recurrent neural network, vagyis RNN.)
 
@@ -44,6 +44,10 @@ Az LSTM egy egysége tulajdonképpen több hagyományos neurális hálózatot ta
 
 Mivel az LSTM agyunk hosszú és rövid távú memóriáját is elég jól szimulálja, elég sokan hittek benne, hogy ez az architektúra hozza majd el a nagy áttörést. És szépen lassan jöttek is az eredmények. 2004-ben szövegfelismerésre betanított rendszert építettek belőlük, tehát ami a hangot, a kimondott szavakat karaktersorozattá alakította. 2009-ben kézírás felismerést oldottak meg sikeresen. 2014-ben pedig angol-francia fordítást valósítottak meg.
 
-Időközben kitaláltak egy másik típusú visszacsatolásos hálózatot is, amely agyunk képfeldolgozási megoldását utánozza. Ezt konvolúciós hálózatnak nevezik. Rengeteg siker fűződik hozzájuk kép- és hangfeldolgozás esetén, de ennek részleteibe most nem mennék bele.
+Még korábban kitaláltak egy másik típusú visszacsatolásos hálózatot is, amely agyunk képfeldolgozási megoldását utánozza. Ezt konvolúciós hálózatnak nevezik. Rengeteg siker fűződik hozzájuk kép- és hangfeldolgozás esetén, de ennek részleteibe most nem mennék bele. Azért ide teszem Kunihiko Fukushima fotóját, aki 1980-ban ezt a neocognitron-nak is nevezett architektúrát kitalálta. Egyébként ő vezette be a RELU aktivációs függvényt is 1969-ben, már csak emiatt is megérdemli a kiemelést.
+
+| <img src="images/KunihikoFukushima.png" height="300" /> |
+|:-------------------------------------------------------:|
+|                   Kunihiko Fukushima                    |
 
 Nyelvi feladatokra, például fordításra használtak közönséges visszacsatolásos, LSTM és konvolúciós hálózatokat is, ezekről a kutatásokról a következő részben mesélek.
