@@ -39,19 +39,13 @@ A Google Brain részleg két hónapon belül előrukkolt egy módosított Transf
 
 A csak dekóderes változatot természetesen nem egy nyelvpárra tanították be, hanem a következő szót (tokent) kellett mindig megtippelnie. 
 
-A megoldás azonnal mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja azt. (Az Attention All You Need publikáció 2017. decemberében jelent meg, a csak dekóderes változat 2018. január végén, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
+A megoldás azonnal mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. (Az Attention All You Need publikáció 2017. decemberében jelent meg, a csak dekóderes változat 2018. január végén, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
 
 Ilyenkor szokás azt mondani, hogy "a többi történelem". Nem tudom miért, mert a korábbiak is azok voltak, a többi meg ahhoz képest inkább a jelen. :-) De valahogy mégis ide passzol. Szóval a többi történelem. 2019-ben kijött a GPT-2. 2020-ban a GPT-3, majd a következő évben annak jobban betanított, instrukciókra jobban reagáló változata. 2022. vége felé a ChatGPT. (Ez is csak betanításban fejlődött.) 2023. márciusában pedig megjelent a GPT-4.  
 
 <img src="images/OpenAI-GPT.png" width="900" height="200"/>
 
-Néhány fejlesztést nem említettem meg, melyek olyan apróbb problémákat orvosoltak, melyek hozzájárultak a nyelvi modellek sikeréhez. Ezt most bepótolom.
-
-Az egyik probléma a fix méretű szótár korlátja volt. Vagy ha úgy vesszük, az ismeretlen szavak kezelése, melyek nem fértek bele a szótárba. Ha a bemenet mindig egy szó, akkor ezzel a problémával szembesülünk. A betűnként beadott módszer meg azért nem előnyös, mert így a neuronhálózat alig tudja kikövetkeztetni a szövegben rejlő tartalmi rendszert.
-
-Részmegoldás, ha irgalmatlanul nagy, több százezer szót tartalmazó szótárral dolgozunk. Ezt alkalmazták is, de még így is maradnak ismeretlen szavak. Főleg, ha soknyelvű a rendszer. Az eddigi legjobb megoldás a byte-pair encoding, ami a szavak és a betűk közt félúton áll, vagyis szavak és szó-részletek, valamint betűk vegyesen reprezentáltak. (2016, Sennrich, Haddow, Birch.) (A byte-pair encoding (BPE) eredetileg tömörítési eljárás volt.)
-
-A másik terület az aktivációs függvények kérdése, vagyis hogy a neuron a bemeneteire érkező jelek összegéből hogyan állapítsa meg, mi kerüljön a kimenetére. Sokféle függvényt kipróbáltak, mindegyik alakja nagyjából hasonló: a kimenet egy bizonyos küszöbértékig nulla, vagy ahhoz közeli érték. Afölött pedig emelkedni kezd. Érdemes differenciálható függvényt választani, tehát amelyik folyamatosan változik, nincsenek benne ugrások vagy szakadások, mert akkor nagyon nehéz matematikailag levezetni a betanításkor használt műveleteket. A mostanában leggyakrabban használt függvényt, a "Gaussian Error Linear Unit" nevűt 2018-ban javasolták.
+A legelső részben nagyon röviden szó volt már az aktivációs függvényről. Ez azt határozza meg, hogy a neuron a bemeneteire érkező jelek összegéből hogyan számolja ki a kimenet értékét. Sokféle függvényt kipróbáltak, mindegyik alakja nagyjából hasonló: a kimenet egy bizonyos küszöbértékig nulla, vagy ahhoz közeli érték. Afölött pedig emelkedni kezd. Érdemes differenciálható függvényt választani, tehát amelyik folyamatosan változik, nincsenek benne ugrások vagy szakadások, mert akkor nagyon nehéz matematikailag levezetni a betanításkor használt műveleteket. A mostanában leggyakrabban használt függvényt, a "Gaussian Error Linear Unit" nevűt 2018-ban javasolták.
 
 A GELU számítási módja a következő: <img src="images/GELU.png" height="40"/>
 
@@ -59,33 +53,37 @@ A GELU számítási módja a következő: <img src="images/GELU.png" height="40"
 |:---------------------------------------------------------:|
 |        Három aktivációs függvény összehasonlítása         |
 
+A Transformer architektúrát nem csak szöveges generatív feladatokra, csetelésre vagy fordításra használják, hanem számtalan más területen is kiváló eredményt produkál. Az OpenAI például elkészítette a DALL-E rendszert is, amely szövegből képet generál, tehát pár szóban leírjuk, mit szeretnénk látni, és a rendszer generál egy sokszor fotorealisztikus képet belőle. Hangokkal kapcsolatos alkalmazási területei is vannak, például hangmintákból megtanulhatja valakinek a hangszínét, amit képes leutánozni. De akár zenét is generálhat, különböző zeneszerzők vagy zenekarok stílusában. De újabb és újabb területeken is bevetik, például a Tesla önvezető autóiban is ott van. Az elmúlt 5 évben szinte minden mesterséges intelligenciás területen ez az architektúra nyújtja a legjobb eredményt.
 
-- GPT- Más jellegű transformer alkalmazások (fordítás, keresés, képfeldolgozás, javítás, önvezető autókig)
+Érdemes megemlíteni, hogy nem csak enkóder-dekóder, illetve csak dekóderes változata van, hanem csak enkóderes is. Ez található például a Google keresőmotorjában, amely feldolgozza ugyan a beírt szöveget, de a kimenete nem szöveg, hanem a keresési algoritmus által használt információ.
+
+Miért ilyen sikeres? Több összetevője van, de a legfontosabb, hogy nagymértékű párhuzamosítással, gyorsan kiszámítható válasza, így minden korábbinál nagyobb hálózatok építhetők belőle. És elkerül minden olyan problémát, amiben más architektúrák gyengék.
 
 Foglaljuk össze, milyen elemek voltak szükségesek a Transformer architektúrához:
-- Neurális hálózat (1943, 1949, 1958)
-- Jobb aktivációs függvények (1969, ???)
-- Backpropagation betanítás (1974, 1985-86)
-- Szekvenciális bemenet kezelése iterációval (1986)
-- Kellő méretű számítási kapacitás, nagy szövegkorpusz (90-es, 2000-es évek)
-- Embedding vektor használata (2001, 2013)
-- Enkóder-dekóder architektúra (2013) - Opcionális
-- Attention mechanizmus (2014)
-- Encoder-decoder transformer (2017)
-- Decoder only transformer (2018)
+ - Neurális hálózat (1943, 1949, 1958)
+ - Jobb aktivációs függvények (1969, 2018)
+ - Backpropagation betanítás (1974, 1985, 1986)
+ - Szekvenciális bemenet kezelése iterációval (1986)
+ - Kellő méretű számítási kapacitás, nagy szövegkorpusz (90-es, 2000-es évek)
+ - Embedding vektor használata (2001, 2013)
+ - Enkóder-dekóder architektúra (2013) - Opcionális
+ - Attention mechanizmus (2014)
+ - Enkóder-dekóder Transformer (2017)
+ - Csak dekóderes Transformer (2018)
 
-Mi az, amivel azóta kísérleteznek?
-- Nagyobb méret
-- Több, tisztítottabb adat betanításkor, korpusz méretének pontos eltalálása
-- Finomhangolás, human feedback használata
-- Különféle position embedding. Hosszabb, vagy akár kötetlen hosszúságú szövegek feldolgozására
-- Jobb tokenizáció
-- Normalizáció helye (numerikus stabilitás)
-- Kisebb számítást igénylő finomítások: 16-bites modellek, sparse transformer
+A Transformer architektúrán megszületése óta keveset változtattak. (Túl azon, hogy egyre nagyobb méretű rendszereket építenek.) De azért van pár részletkérdés, ahol kisebb fejlesztések történtek.
 
-- Multimodalitás
+Nagyon nagy jelentősége van a betanításra részleteinek. Milyen adatokon és hogyan tanítjuk be a rendszert. Jellemzően először automatikus tanítással előtanítanak egy rendszert, majd azt részben emberi visszajelzések alapján finomhangolják. Az pélául, hogy a rendszer csetelni tud, vagy instruciókat értelmezni, ezen a finomhangoláson múlik. (Olyan példákat mutatnak neki, amiben instrukciók végrehajtása szerepel.)
 
-Konklúzió:
+Van még néhány részletkérdés, ahol a különféle Transformer megvalósítások igyekeznek kicsit javítani a teljesítményen. Például:
+ - Pozíció beágyazás (Különféle algoritmusok.) Képesség hosszabb, vagy akár kötetlen hosszúságú szövegek feldolgozására
+ - Jobb tokenizáció (nagyobb szótár, máshogy kiválasztott szavak (több nyelvű szavak is), vagy több szót tartalmazó tokenek)
+ - Normalizáció helye (numerikus stabilitás)
+ - Kisebb számítást igénylő finomítások: 16-bites modellek, sparse transformer
+
+És egy nagyon izgalmas terület, amit már a GPT-4 megvalósított: Multimodalitás, vagyis különféle adatok kezelése. Itt a szöveg mellett képi bemenet lehetséges elvileg. (Bár ezt még nem próbálhatja ki földi halandó.)
+
+Végezetül néhány gondolat általában a mesterséges intelligencia kutatásáról:
 
 A fejlődés folyamatos volt, apránként haladt. Egy-egy lépés megtétele benne volt a levegőben, csak az volt a kérdés, hogy ki éri el hamarabb. Ahogy jöttek a komolyabb sikerek, egyre többen kezdtek vele foglalkozni, egyre komolyabb finanszírozással. A megvalósult rendszerek egyre jobban, immár elég látványosan közelítik az emberi képességeket. Az eredmények nem feltétlenül ezt a lineáris fejlődést követik: egy darabig szerények, de aztán beérik a gyümölcs, és gyorsul a fejlődés. Ez talán egy exponenciális görbe, melynek hosszú ideig lapos az íve, majd egy ponton meredeken kilő. (Ez Kurzweil tapasztalata és becslése.) De ha nem is gondoljuk törvényszerűnek, hogy a fejlődés exponenciális, és akár lassabb fejlődési szakaszokat is elképzelhetőnek tartunk, nagy valószínűséggel ezalatt is gyűlnek majd az apró haladások, melyeknek eredményeként később újra kilő a görbe.
 
