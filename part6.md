@@ -9,16 +9,21 @@ A fő motivációt ehhez a felismeréshez az adta, hogy a jobb eredmény eléré
 Mindezt a Google Brain csapata valósította meg, akik a tanulmányt 2017-ben publikálták.
 
 | <img src="images/JakobUszkoreit.png" height="300" /> | <img src="images/AshishVaswani.png" height="300" /> | <img src="images/IlliaPolosukhin.png" height="300" /> | <img src="images/NoamShazeer.png" height="300" /> |
-|:----------------------------------------------------:|:---------------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------------:|
-|                   Jakob Uszkoreit                    |                   Ashish Vaswani                    |                   Illia Polosukhin                    |                   Noam Shazeer                    |
+|:-----------------------------------------------------:|:---------------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------------:|
+|                    Jakob Uszkoreit                    |                   Ashish Vaswani                    |                   Illia Polosukhin                    |                   Noam Shazeer                    |
 
 Itt is enkóder-dekóder architektúrát alkalmaztak, és az attention mechanizmus lépései is megegyeztek a Bahdanau-attention lépéseivel. Annyi fejlesztés történt ebben a tekintetben, hogy bevezettek egy self-attention lépést is.
 
-A Bahdanau-attention a dekóderben működött, ahol az volt a feladata, hogy az enkóder által eltárolt sok vektor közül kiválassza a szerinte legfontosabbakat, és azt a néhányat használja csak, amire érdemes figyelmet fordítani. (Mindet nem használhatja, mert nem fér bele az egész egyetlen vektorba.) Ez tehát a dekóderben működő figyelem volt, ami az enkóder adataira figyelt.
+Az eredeti Bahnadau-attention a dekóderben működött, ahol az volt a feladata, hogy az enkóder által eltárolt sok vektor közül kiválassza a szerinte legfontosabbakat, és azt a néhányat használja csak, amire érdemes figyelmet fordítani. (Mindet nem használhatja, mert nem fér bele az egész egyetlen vektorba.) Ez tehát a dekóderben működő figyelem volt, ami az enkóder adataira figyelt. Nem önmagára, hanem egy másik részegységre.
 
-A Transformerben is volt egy pontosan ugyanilyen lépés. De emellett pluszban az enkóderben és a dekóderben is ott volt a self-attention is, vagyis önmagára való figyelés. Ilyenkor az enkóder azon adatokra figyelt (azokat használta), melyeket az enkóder tárolt el. És a dekóder is azt, amit ő maga tárolt el.
+A Transformerben is van egy pontosan ugyanilyen lépés. De emellett pluszban az enkóderben és a dekóderben is van egy self-attention lépés, vagyis önmagára való figyelés. Ilyenkor az enkóder azon adatokra figyel (azokat használta), melyeket saját maga tárolt el a többi tokenről. És a dekóder is ugyanezt csinálja, a saját maga által eltárolt adatok alapján.
 
-Így aztán nem is volt szükség arra, hogy az enkóder kimenetét a következő lépésben újra beadjuk a bemeneten. Ez a visszacsatolás ki lett véve a rendszerből. És a dekóder oldalon sem volt rá szükség.
+Így aztán nincs szükség arra, hogy az enkóder kimenetét a következő lépésben újra beadjuk a bemeneten. Ez a visszacsatolás ki lett véve a rendszerből. És a dekóder oldalon sincs rá szükség.
+
+| <img src="images/TransformerEncoderDecoder.png" height="400" /> |
+|:---------------------------------------------------------------:|
+|                           Transformer                           |
+
 
 Hasonló maradt a feldolgozás sorrendje. Tehát a bemenő szavakat egyesével beadtuk az enkódernek. De az újabb és újabb menetek nem mosták ki a korábbiakat, minden el lett tárolva. És minden menet figyelni tudott az addig beadott szavakra. De csak azokra fókuszált, amik szerinte ebből fontosak voltak.
 
@@ -26,28 +31,36 @@ A dekódert is hasonló iterációval használtuk újra is újra. Beadva neki az
 
 Az attention mechanizmusban szerepelt egy további fejlesztés is, a multi-head megoldás. De ennek oka csak a jobb párhuzamosíthatóság volt.
 
-TODO: Decoder-only Transformer
-- Generating Wikipedia by summarizing long sentences (2018, Google Brain)
-- Peter J. Liu, Mohammad Saleh, Etienne Pot, Ben Goodrich, Ryan Sepassi, Łukasz Kaiser, Noam Shazeer
-- https://arxiv.org/pdf/1801.10198.pdf
+A Google Brain részleg két hónapon belül előrukkolt egy módosított Transformerrel, amelyet már nem fordításra fejlesztettek, hanem egyszerűen csak a szöveg folytatására. Itt tehát nem volt szükség enkóderre és dekóderre is, elég volt egyetlen komponens. (Ezt dekódernek hívják, de tulajdonképpen ellátja az enkóder funkciót is: feldolgozza a bemenetet. Sőt, igazából az enkóder szerkezetével egyezik meg, mert csak self-attention van benne, hisz nincs is másik komponens, amire irányulhatna a figyelem.)
 
-A megoldás azonnal mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja azt. (Az Attention All You Need publikáció 2017. decemberében jelent meg, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
+| <img src="images/Decoder-only_transformer.png" height="500" /> |
+|:--------------------------------------------------------------:|
+|            Csak dekódereket tartalmazó transformer             |
+
+A csak dekóderes változatot természetesen nem egy nyelvpárra tanították be, hanem a következő szót (tokent) kellett mindig megtippelnie. 
+
+A megoldás azonnal mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja azt. (Az Attention All You Need publikáció 2017. decemberében jelent meg, a csak dekóderes változat 2018. január végén, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
 
 Ilyenkor szokás azt mondani, hogy "a többi történelem". Nem tudom miért, mert a korábbiak is azok voltak, a többi meg ahhoz képest inkább a jelen. :-) De valahogy mégis ide passzol. Szóval a többi történelem. 2019-ben kijött a GPT-2. 2020-ban a GPT-3, majd a következő évben annak jobban betanított, instrukciókra jobban reagáló változata. 2022. vége felé a ChatGPT. (Ez is csak betanításban fejlődött.) 2023. márciusában pedig megjelent a GPT-4.  
 
 <img src="images/OpenAI-GPT.png" width="900" height="200"/>
 
-Néhány apróságot nem említettem meg, melyek hozzájárultak ezekhez a sikerekhez. Ezt most bepótolom.
+Néhány fejlesztést nem említettem meg, melyek olyan apróbb problémákat orvosoltak, melyek hozzájárultak a nyelvi modellek sikeréhez. Ezt most bepótolom.
 
 Az egyik probléma a fix méretű szótár korlátja volt. Vagy ha úgy vesszük, az ismeretlen szavak kezelése, melyek nem fértek bele a szótárba. Ha a bemenet mindig egy szó, akkor ezzel a problémával szembesülünk. A betűnként beadott módszer meg azért nem előnyös, mert így a neuronhálózat alig tudja kikövetkeztetni a szövegben rejlő tartalmi rendszert.
 
 Részmegoldás, ha irgalmatlanul nagy, több százezer szót tartalmazó szótárral dolgozunk. Ezt alkalmazták is, de még így is maradnak ismeretlen szavak. Főleg, ha soknyelvű a rendszer. Az eddigi legjobb megoldás a byte-pair encoding, ami a szavak és a betűk közt félúton áll, vagyis szavak és szó-részletek, valamint betűk vegyesen reprezentáltak. (2016, Sennrich, Haddow, Birch.) (A byte-pair encoding (BPE) eredetileg tömörítési eljárás volt.)
 
+A másik terület az aktivációs függvények kérdése, vagyis hogy a neuron a bemeneteire érkező jelek összegéből hogyan állapítsa meg, mi kerüljön a kimenetére. Sokféle függvényt kipróbáltak, mindegyik alakja nagyjából hasonló: a kimenet egy bizonyos küszöbértékig nulla, vagy ahhoz közeli érték. Afölött pedig emelkedni kezd. Érdemes differenciálható függvényt választani, tehát amelyik folyamatosan változik, nincsenek benne ugrások vagy szakadások, mert akkor nagyon nehéz matematikailag levezetni a betanításkor használt műveleteket. A mostanában leggyakrabban használt függvényt, a "Gaussian Error Linear Unit" nevűt 2018-ban javasolták.
+
+A GELU számítási módja a következő: <img src="images/GELU.png" height="40"/>
+
+| <img src="images/activationFunctions.png" height="200" /> |
+|:---------------------------------------------------------:|
+|        Három aktivációs függvény összehasonlítása         |
 
 
-- Jobb aktivációs függvények (nemlinearitás. Mikor?????????? Hozzuk ezt át az első részből)
 - GPT- Más jellegű transformer alkalmazások (fordítás, keresés, képfeldolgozás, javítás, önvezető autókig)
-- GAN ????https://matthewdwhite.medium.com/a-brief-history-of-generative-ai-cb1837e67106
 
 Foglaljuk össze, milyen elemek voltak szükségesek a Transformer architektúrához:
 - Neurális hálózat (1943, 1949, 1958)
@@ -72,7 +85,9 @@ Mi az, amivel azóta kísérleteznek?
 
 - Multimodalitás
 
-Konklúzió: a fejlődés folyamatos volt, apránként haladt. Egy-egy lépés megtétele benne volt a levegőben, csak az volt a kérdés, hogy ki éri el hamarabb. Ahogy jöttek a komolyabb sikerek, egyre többen kezdtek vele foglalkozni, egyre komolyabb finanszírozással. A megvalósult rendszerek egyre jobban, immár elég látványosan közelítik az emberi képességeket. Az eredmények nem feltétlenül ezt a lineáris fejlődést követik: egy darabig szerények, de aztán beérik a gyümölcs, és gyorsul a fejlődés. Ez talán egy exponenciális görbe, melynek hosszú ideig lapos az íve, majd egy ponton meredeken kilő. (Ez Kurzweil tapasztalata és becslése.) De ha nem is gondoljuk törvényszerűnek, hogy a fejlődés exponenciális, és akár lassabb fejlődési szakaszokat is elképzelhetőnek tartunk, nagy valószínűséggel ezalatt is gyűlnek majd az apró haladások, melyeknek eredményeként később újra kilő a görbe.
+Konklúzió:
+
+A fejlődés folyamatos volt, apránként haladt. Egy-egy lépés megtétele benne volt a levegőben, csak az volt a kérdés, hogy ki éri el hamarabb. Ahogy jöttek a komolyabb sikerek, egyre többen kezdtek vele foglalkozni, egyre komolyabb finanszírozással. A megvalósult rendszerek egyre jobban, immár elég látványosan közelítik az emberi képességeket. Az eredmények nem feltétlenül ezt a lineáris fejlődést követik: egy darabig szerények, de aztán beérik a gyümölcs, és gyorsul a fejlődés. Ez talán egy exponenciális görbe, melynek hosszú ideig lapos az íve, majd egy ponton meredeken kilő. (Ez Kurzweil tapasztalata és becslése.) De ha nem is gondoljuk törvényszerűnek, hogy a fejlődés exponenciális, és akár lassabb fejlődési szakaszokat is elképzelhetőnek tartunk, nagy valószínűséggel ezalatt is gyűlnek majd az apró haladások, melyeknek eredményeként később újra kilő a görbe.
 
 Talán szükség van még néhány rafinált trükkre, melyről ma még fogalmunk sincs. De ezek vagy viszonylag gyorsan, az evolúció fokozatos haladásával valósultak meg az emberré válás során, tehát kicsi az esélye, hogy annyira összetett dolgokról legyen szó, amit képtelenség lenne leutánoznunk. Vagy ha evolúciósan jóval hosszabb idő alatt alakult ki, tehát esetleg mégis rettenetesen komplex dologról, dolgokról van szó, akkor a viszonylag egyszerű állatok is képesek lehetnek ezekre. Úgyhogy akkor meg emiatt tűnik valószínűnek, hogy nem vagyunk túlságosan távol az emberi szint elérésétől.
 
