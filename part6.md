@@ -31,7 +31,7 @@ A dekódert is hasonló iterációval használtuk újra és újra. Beadva neki a
 
 Az attention mechanizmusban szerepelt egy további fejlesztés is, a multi-head megoldás. De ennek oka csak a jobb párhuzamosíthatóság volt.
 
-A Google Brain részleg két hónapon belül előrukkolt egy módosított Transformerrel, amelyet már nem fordításra fejlesztettek, hanem egyszerűen csak a szöveg folytatására. Itt tehát nem volt szükség enkóderre és dekóderre is, elég volt egyetlen komponens. (Ezt dekódernek hívják, de tulajdonképpen ellátja az enkóder funkciót is: feldolgozza a bemenetet. Sőt, igazából az enkóder szerkezetével egyezik meg, mert csak self-attention van benne, hisz nincs is másik komponens, amire irányulhatna a figyelem.)
+A Google Brain részleg fél év múlva előrukkolt egy módosított Transformerrel, amelyet már nem fordításra fejlesztettek, hanem egyszerűen csak a szöveg folytatására. Itt tehát nem volt szükség enkóderre és dekóderre is, elég volt egyetlen komponens. (Ezt dekódernek hívják, de tulajdonképpen ellátja az enkóder funkciót is: feldolgozza a bemenetet. Sőt, igazából az enkóder szerkezetével egyezik meg, mert csak self-attention van benne, hisz nincs is másik komponens, amire irányulhatna a figyelem.)
 
 | <img src="images/Decoder-only_transformer.png" height="500" /> |
 |:--------------------------------------------------------------:|
@@ -39,7 +39,7 @@ A Google Brain részleg két hónapon belül előrukkolt egy módosított Transf
 
 A csak dekóderes változatot természetesen nem egy nyelvpárra tanították be, hanem a következő szót (tokent) kellett mindig megtippelnie. 
 
-A megoldás mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. (Az Attention All You Need publikáció 2017. decemberében jelent meg, a csak dekóderes változat 2018. január végén, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
+A megoldás mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. (A csak dekóderes változat 2018. január végén jelent meg, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
 
 Ilyenkor szokás azt mondani, hogy "a többi történelem". Nem tudom miért, mert a korábbiak is azok voltak, a többi meg ahhoz képest inkább a jelen. :-) De valahogy mégis ide passzol. Szóval a többi történelem. 2019-ben kijött a GPT-2. 2020-ban a GPT-3, majd a következő évben annak jobban betanított, instrukciókra jobban reagáló változata. 2022. vége felé a ChatGPT. (Ez is csak betanításban fejlődött.) 2023. márciusában pedig megjelent a GPT-4.  
 
@@ -61,7 +61,7 @@ Mivel itt elég jól érthető, megemlítem még, hogy van ezzel egy olyan probl
 
 <img src="images/OpenAI-GPT.png" width="900" height="200"/>
 
-A legelső részben nagyon röviden szó volt már az aktivációs függvényről. Ez azt határozza meg, hogy a neuron a bemeneteire érkező jelek összegéből hogyan számolja ki a kimenet értékét. Sokféle függvényt kipróbáltak, mindegyik alakja nagyjából hasonló: a kimenet egy bizonyos küszöbértékig nulla, vagy ahhoz közeli érték. Afölött pedig emelkedni kezd. Érdemes differenciálható függvényt választani, tehát amelyik folyamatosan változik, nincsenek benne ugrások vagy szakadások, mert akkor nagyon nehéz matematikailag levezetni a betanításkor használt műveleteket. A mostanában leggyakrabban használt függvényt, a "Gaussian Error Linear Unit" nevűt 2018-ban javasolták.
+A legelső részben nagyon röviden szó volt már az aktivációs függvényről. Ez azt határozza meg, hogy a neuron a bemeneteire érkező jelek összegéből hogyan számolja ki a kimenet értékét. Sokféle függvényt kipróbáltak, mindegyik alakja nagyjából hasonló: a kimenet egy bizonyos küszöbértékig nulla, vagy ahhoz közeli érték. Afölött pedig emelkedni kezd. Érdemes differenciálható függvényt választani, tehát amelyik folyamatosan változik, nincsenek benne ugrások vagy szakadások, mert akkor nagyon nehéz matematikailag levezetni a betanításkor használt műveleteket. A mostanában leggyakrabban használt függvényt, a "Gaussian Error Linear Unit" nevűt 2016-ban javasolták.
 
 A GELU számítási módja a következő: <img src="images/GELU.png" height="40"/>
 
