@@ -16,7 +16,7 @@ Itt is enkóder-dekóder architektúrát alkalmaztak, és az attention mechanizm
 
 Az eredeti Bahnadau-attention a dekóderben működött, ahol az volt a feladata, hogy az enkóder által eltárolt sok vektor közül kiválassza a szerinte legfontosabbakat, és azt a néhányat használja csak, amire érdemes figyelmet fordítani. (Mindet nem használhatja, mert nem fér bele az egész egyetlen vektorba.) Ez tehát a dekóderben működő figyelem volt, ami az enkóder adataira figyelt. Nem önmagára, hanem egy másik részegységre.
 
-A Transformerben is van egy pontosan ugyanilyen lépés. De emellett pluszban az enkóderben és a dekóderben is van egy self-attention lépés, vagyis önmagára való figyelés. Ilyenkor az enkóder azon adatokra figyel (azokat használta), melyeket saját maga tárolt el a többi tokenről. És a dekóder is ugyanezt csinálja, a saját maga által eltárolt adatok alapján.
+A Transformerben is van egy pontosan ugyanilyen lépés. De emellett pluszban az enkóderben és a dekóderben is van egy self-attention lépés, vagyis önmagára való figyelés. Ilyenkor az enkóder azon adatokra figyel (azokat használja), melyeket saját maga tárolt el a többi tokenről. És a dekóder is ugyanezt csinálja, a saját maga által eltárolt adatok alapján.
 
 Így aztán nincs szükség arra, hogy az enkóder kimenetét a következő lépésben újra beadjuk a bemeneten. Ez a visszacsatolás ki lett véve a rendszerből. És a dekóder oldalon sincs rá szükség.
 
@@ -27,7 +27,7 @@ A Transformerben is van egy pontosan ugyanilyen lépés. De emellett pluszban az
 
 Hasonló maradt a feldolgozás sorrendje. Tehát a bemenő szavakat egyesével beadtuk az enkódernek. De az újabb és újabb menetek nem mosták ki a korábbiakat, minden el lett tárolva. És minden menet figyelni tudott az addig beadott szavakra. De csak azokra fókuszált, amik szerinte ebből fontosak voltak.
 
-A dekódert is hasonló iterációval használtuk újra is újra. Beadva neki az előző kimenetet bemenetként. De megintcsak megvolt minden korábbi feldolgozásról minden szükséges információ hagyományos módon eltárolva, és azok közül szemezgetve, súlyozva fel lehetett használni bármelyiket.
+A dekódert is hasonló iterációval használtuk újra és újra. Beadva neki az előző kimenetet bemenetként. De megintcsak megvolt minden korábbi feldolgozásról minden szükséges információ hagyományos módon eltárolva, és azok közül szemezgetve, súlyozva fel lehetett használni bármelyiket.
 
 Az attention mechanizmusban szerepelt egy további fejlesztés is, a multi-head megoldás. De ennek oka csak a jobb párhuzamosíthatóság volt.
 
@@ -39,9 +39,25 @@ A Google Brain részleg két hónapon belül előrukkolt egy módosított Transf
 
 A csak dekóderes változatot természetesen nem egy nyelvpárra tanították be, hanem a következő szót (tokent) kellett mindig megtippelnie. 
 
-A megoldás azonnal mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. (Az Attention All You Need publikáció 2017. decemberében jelent meg, a csak dekóderes változat 2018. január végén, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
+A megoldás mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. (Az Attention All You Need publikáció 2017. decemberében jelent meg, a csak dekóderes változat 2018. január végén, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
 
 Ilyenkor szokás azt mondani, hogy "a többi történelem". Nem tudom miért, mert a korábbiak is azok voltak, a többi meg ahhoz képest inkább a jelen. :-) De valahogy mégis ide passzol. Szóval a többi történelem. 2019-ben kijött a GPT-2. 2020-ban a GPT-3, majd a következő évben annak jobban betanított, instrukciókra jobban reagáló változata. 2022. vége felé a ChatGPT. (Ez is csak betanításban fejlődött.) 2023. márciusában pedig megjelent a GPT-4.  
+
+<img src="images/OpenAI-GPT.png" width="900" height="200"/>
+
+Ha esetleg nehezen volt követhető a fejlasztések sora, megpróbálom egy hasonlattal elmagyarázni. Az egyszerűség kedvéért vegyük a csak dekóderes megoldást, tehát ahol annyi a feladat, hogy megkap egy szöveget, és tegyen hozzá egyetlen új szót.
+
+Ilyen feladatra nem tudok arról, hogy használtak volna fix méretű neurális hálót (csak fordításra), de tegyük fel, hogy van egy ilyen. Az olyan, mintha lett volna egy hangrögzítőnk, amivel felveszünk egy mondatot. Idősebbek mondjuk képzeljenek el egy rövid darab magnószalagot. Ezt a rendszer egyben, egy menetben feldolgozta, és az eredményt, egy új szót lementett a kimeneti szalagra. Ez a következő szó. Kész. A gond ezzel az, hogy mondjuk van egy hét szó hosszúságot befogadni képes rendszerünk, ami nyilván nem lesz képes több ezer szavas szöveggel boldogulni. 
+
+A közönséges visszacsatolásos megoldás úgy működik, hogy egy jóval rövidebb szalag van, amire csak egy szó fér rá. Rámondjuk az első szót, a rendszer ezt feldolgozza, és erre a bemeneti szalagra rámond valamit, amit erről gondol. Tehát a szalagon most ott van két szó, mintha két ember egyszerre beszélt volna. Rámondjuk a második bemeneti szót (most már három hang van a szalagon), amit megint feldolgoz a rendszer, és ezt is rámondja a szalagra. Egy idő után egyre több hang lett egymásra felvéve. Tegyük fel, hogy az utolsó szavak mindig hangosabban hallhatók, a régebbiek pedig egyre halkulnak. Pár menet után a régebbi szavak szinte már nem is hallatszanak, csak mint egy zaj. Amikor rámondtuk az utolsó szót, a rendszer azt még jól hallotta, de a korábbiakat jóval kevésbé érti. Mond egy választ, amit erről gondol, ami lehet a következő szó (csoda, hogy tud ilyet), de a bemenet elejét nem igazán használta fel ehhez.
+
+Az attention mechanizmus annyit változtat ezen, hogy minden szó feldolgozásakor elmenti egy kis gyűjteményben, hogy arról a szóról mit gondol. És a bemenet is mindig tisztán egyetlen szó, nem írja a gondolatát vissza a bemenő szalagra. Amikor eldönti, hogy mit gondol, akkor mindig tekintetbe veszi az aktuális bemenetet, és az eltárolt gyűjteményét. Ezekből készít egy szalagot, ahol sok szót egymásra mond, de nem az összes korábbit, csak mondjuk a legfontosabb tizet. Eldönti valahogy, hogy szerinte mik voltak a legfontosabbak. Lehet, hogy az előző pár szó, de lehetett több bekezdéssel korábbi is. Egyformán jó minőségű felvétele van mindegyikről. Ezt a tizet menti mindig jó hangosan egymásra (a maradékot csak nagyon nagyon halkan), és ez alapján dönti el, mit gondoljon.
+
+Az attention mechanizmus tehát tulajdonképpen kiszűri a zajt. Lehalkítja, ami szerinte nem olyan fontos. A lényegre figyel.
+
+Nem feltétlenül biztos, hogy ez a változat lesz a legsikeresebb a jövőben is. De ez most egy egész jól működő megoldás, mi ráadásul viszonylag hatékonyan kiszámítható. Nem kell egy olyan hatalmas neuronhálózat, ami egyben sok infót fel tud dolgozni. És a korábbi gondolatokat hagyományos memóriában menti el, nem neuronokkal, vagyis nem pontosan a biológiai agyat másolja. Inkább olyan, mintha az agyba beültetnénk egy csipet.
+
+Mivel itt elég jól érthető, megemlítem még, hogy van ezzel egy olyan probléma is, hogy a rendszernek meg kell állapítania a szavak sorrendjét. Mert most sok szó egymáson van, de nem mindegy, hogy milyen sorrendben mondtuk ki őket. Erre való az úgynevezett "position encoding", ami valahogy megállapíthatóvá teszi a sorrendet. Mondjuk a fenti elképzelt esetben ez működhet az alapján, hogy mennyire hangosan hallatszik a szó. A leghangosabb az utolsó. De a valódi Transformer architektúra erre használ egy külön kódolást. Ez változatonként eltérő lehet, vannak itt újabb fejlesztések, de ennyi a lényegük.
 
 <img src="images/OpenAI-GPT.png" width="900" height="200"/>
 
@@ -57,7 +73,7 @@ A Transformer architektúrát nem csak szöveges generatív feladatokra, csetel�
 
 Érdemes megemlíteni, hogy nem csak enkóder-dekóder, illetve csak dekóderes változata van, hanem csak enkóderes is. Ez található például a Google keresőmotorjában, amely feldolgozza ugyan a beírt szöveget, de a kimenete nem szöveg, hanem a keresési algoritmus által használt információ.
 
-Miért ilyen sikeres? Több összetevője van, de a legfontosabb, hogy nagymértékű párhuzamosítással, gyorsan kiszámítható válasza, így minden korábbinál nagyobb hálózatok építhetők belőle. És elkerül minden olyan problémát, amiben más architektúrák gyengék.
+Miért ilyen sikeres? Több összetevője van, de a legfontosabb, hogy nagymértékű párhuzamosítással, gyorsan kiszámítható a válasza, így minden korábbinál nagyobb hálózatok építhetők belőle. És elkerül minden olyan problémát, amiben más architektúrák gyengék.
 
 Foglaljuk össze, milyen elemek voltak szükségesek a Transformer architektúrához:
  - Neurális hálózat (1943, 1949, 1958)
@@ -73,7 +89,7 @@ Foglaljuk össze, milyen elemek voltak szükségesek a Transformer architektúr�
 
 A Transformer architektúrán megszületése óta keveset változtattak. (Túl azon, hogy egyre nagyobb méretű rendszereket építenek.) De azért van pár részletkérdés, ahol kisebb fejlesztések történtek.
 
-Nagyon nagy jelentősége van a betanításra részleteinek. Milyen adatokon és hogyan tanítjuk be a rendszert. Jellemzően először automatikus tanítással előtanítanak egy rendszert, majd azt részben emberi visszajelzések alapján finomhangolják. Az pélául, hogy a rendszer csetelni tud, vagy instruciókat értelmezni, ezen a finomhangoláson múlik. (Olyan példákat mutatnak neki, amiben instrukciók végrehajtása szerepel.)
+Nagyon nagy jelentősége van a betanítás részleteinek. Milyen adatokon és hogyan tanítjuk be a rendszert. Jellemzően először automatikus tanítással előtanítanak egy rendszert, majd azt részben emberi visszajelzések alapján finomhangolják. Az például, hogy a rendszer csetelni tud, vagy instruciókat értelmezni, ezen a finomhangoláson múlik. (Olyan példákat mutatnak neki, amiben instrukciók végrehajtása szerepel.)
 
 Van még néhány részletkérdés, ahol a különféle Transformer megvalósítások igyekeznek kicsit javítani a teljesítményen. Például:
  - Pozíció beágyazás (Különféle algoritmusok.) Képesség hosszabb, vagy akár kötetlen hosszúságú szövegek feldolgozására
@@ -89,4 +105,4 @@ A fejlődés folyamatos volt, apránként haladt. Egy-egy lépés megtétele ben
 
 Talán szükség van még néhány rafinált trükkre, melyről ma még fogalmunk sincs. De ezek vagy viszonylag gyorsan, az evolúció fokozatos haladásával valósultak meg az emberré válás során, tehát kicsi az esélye, hogy annyira összetett dolgokról legyen szó, amit képtelenség lenne leutánoznunk. Vagy ha evolúciósan jóval hosszabb idő alatt alakult ki, tehát esetleg mégis rettenetesen komplex dologról, dolgokról van szó, akkor a viszonylag egyszerű állatok is képesek lehetnek ezekre. Úgyhogy akkor meg emiatt tűnik valószínűnek, hogy nem vagyunk túlságosan távol az emberi szint elérésétől.
 
-Az elérhető számítási kapacitás egyre nagyobb. Az agy méret-tartományának elérése is a belátható jövőbe került. Agyunk különféle képességek kombinációját valósítja meg, tehát tulajdonképpen sokféle funkció egybegyúrása. Valószínűleg különböző módon betanított hálózatok hibridje. Nem szükséges pontosan ugyanolyat csinálni, de ennek megfelelő szerkezetét kell a jövőben megtalálni, és megvalósulhat az általános mesterséges intelligencia.  Ami a mennyiségi, sebességbeli fejlesztés miatt azonnal a meghaladását is jelenti. Nagy esély van rá, hogy mindez még sokunk életében megvalósul.
+Az elérhető számítási kapacitás egyre nagyobb. Az agy méret-tartományának elérése is a belátható jövőbe került. Agyunk különféle képességek kombinációját valósítja meg, tehát tulajdonképpen sokféle funkció egybegyúrása. Valószínűleg különböző módon betanított hálózatok hibridje. Nem szükséges pontosan ugyanolyat csinálni, de ennek megfelelő szerkezetét kell a jövőben megtalálni, és megvalósulhat az általános mesterséges intelligencia. Ami a mennyiségi, sebességbeli fejlesztés miatt azonnal az emberi képességek meghaladását jelenti. Nagy esély van rá, hogy mindez még sokunk életében megvalósul.
