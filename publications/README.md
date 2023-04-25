@@ -91,7 +91,7 @@
 
 ## 2010-es évek ##
 
-- Fordítás előrecsatolt hálózattal, fix méretű bemenet és kimenet (7-7 szó), az első, ami 1-of-N embeddinget használt
+- Fordítás előrecsatolt hálózattal, fix méretű bemenet és kimenet (7-7 szó), az első, ami 1-of-N embedding-et használt
   - `2012`
   - Holger Schwenk
   - Continuous space translation models for phrase-based statistical machine translation.pdf
@@ -101,11 +101,11 @@
 - AlexNET, 2012
 
 
-- Az első enkóder-dekóder architektúra neurális háló alapú fordításra, 1-of-N embedding-et használatával
+- Az első enkóder-dekóder architektúra neurális háló alapú fordításra, 1-of-N embedding használatával
   - `2013. jún. 15.`
   - Nal Kalchbrenner, Phil Blunsom
   - Recurrent convolutional neural networks for discourse compositionality
-    https://arxiv.org/abs/1306.3584
+  - https://arxiv.org/abs/1306.3584
 
 
 - Word2Vec word embedding
