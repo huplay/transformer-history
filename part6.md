@@ -82,6 +82,7 @@ Foglaljuk össze, milyen elemek voltak szükségesek a Transformer architektúr�
  - Szekvenciális bemenet kezelése iterációval (1986)
  - Kellő méretű számítási kapacitás, nagy szövegkorpusz (90-es, 2000-es évek)
  - Embedding vektor használata (2001, 2013)
+ - Hiányzó (vagy következő) elem megbecslésével való tanítás (next token prediction) (????, 2013)
  - Enkóder-dekóder architektúra (2013) - Opcionális
  - Attention mechanizmus (2014)
  - Enkóder-dekóder Transformer (2017)
