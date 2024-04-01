@@ -144,6 +144,21 @@
   - https://arxiv.org/abs/1508.07909
 
 
+- Intra-sentence attention (self-attention, de még visszacsatolásos hálózatokra)
+  - `2016. jan. 25.`
+  - Jianpeng Cheng, Li Dong, Mirella Lapata
+  - Long Short-Term Memory-Networks for Machine Reading
+  - https://arxiv.org/abs/1601.06733
+
+
+- Self-attention előrecsatolásos hálózatokra (a Transformer architektúra korai változata. A párhuzamosítás még nincs megoldva, de az ötlet azt a célt szolgálta, hogy a párhuzamosítás lehetővé váljon.)
+  - `2016. jún. 6.`
+  - Ankur P. Parikh, Oscar Täckström, Dipanjan Das, Jakob Uszkoreit
+  - Google Brain
+  - A Decomposable Attenntion Model for Natural Language Inference
+  - https://arxiv.org/abs/1606.01933
+
+
 - Transformer architektúra
   - `2017. jún. 12.`
   - Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin
@@ -160,7 +175,7 @@
   - https://arxiv.org/abs/1801.10198
 
 
-- GELU aktiväciós függvény
+- GELU aktivációs függvény
   - `2016. jún. 27.`
   - Dan Hendrycks, Kevin Gimpel
   - Gaussian Error Linear Units (GELUs)
