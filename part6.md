@@ -2,34 +2,34 @@
 
 Az eddigi részekben bemutattam a neurális hálózatok kutatásának korai időszakát, majd a backpropagation betanítási algoritmust és a visszacsatolásos hálózatokat. Láttuk, ahogy a word embedding trükkje elvezetett az első használható fordításokig, majd az enkóder-dekóder architektúra és a Bahdanau-attention megoldotta, hogy változó hosszúságú szövegeket is kezelni lehessen. Nézzük, mi hiányzott még, hogy megszülessen a Transformer architektúra! 
 
-Az előző részben tulajdonképpen már minden fontosat összeszedtem. Láttuk a közönséges visszacsatolásos hálózat nagy hátrányát, hogy az újabb és újabb menetekkel a korábbi bemenetek hatása szép lassan kimosódik. Emiatt használt mindenki önmagában is memóriával rendelkező neurális hálózatot, konvolúciósat vagy LSTM-et, GRU-t. Emiatt trükközött Sutskever csapata azzal, hogy visszafelé adta be a szavakat. És ez ösztönözte a Bahdanau attention mechanizmus megszületését is. A Transformer architektúra létrehozásakor tulajdonképpen azt ismerték fel, hogy nem kell a memóriával rendelkező hálózat, nem kell a visszafelé beadogatás trükkje, önmagában az attention mechanizmus mindent meg tud oldani. Ezért is adták a tanulmányuk címének azt, hogy "Attention Is All You Need", vagyis "Figyelemre van csupán szükség".
+Az előző részben tulajdonképpen már minden fontosat összeszedtem. Láttuk a közönséges visszacsatolásos hálózat nagy hátrányát, hogy az újabb és újabb menetekkel a korábbi bemenetek hatása szép lassan kimosódik. Emiatt használt mindenki önmagában is memóriával rendelkező neurális hálózatot, konvolúciósat vagy LSTM-et, GRU-t. Emiatt trükközött Sutskever csapata azzal, hogy visszafelé adta be a szavakat, és ez ösztönözte a Bahdanau attention mechanizmus megszületését is. A Transformer architektúra létrehozásakor tulajdonképpen azt ismerték fel, hogy nem kell a memóriával rendelkező hálózat, nem kell a visszafelé beadogatás trükkje, önmagában az attention mechanizmus mindent meg tud oldani. Ezért is adták a tanulmányuk címének azt, hogy "Attention Is All You Need", vagyis "Figyelemre van csupán szükség".
 
-A fő motivációt ehhez a felismeréshez az adta, hogy a jobb eredmény elérése érdekében a korábbiaknál nagyobb hálózatokat szerettek volna építeni. A visszacsatolásos hálózatok, mint a konvolúciós és az LSTM azonban nagyon számításigényesek, mert az egyes lépések kevéssé párhuzamosíthatók. A sima előrecsatolásos hálózat viszont jóval egyszerűbb eset. Egyszerű vektor-mátrix szorzásból áll a számítás, amely jól szétválasztható sok vektor-vektor szorzásra. A többmagos processzorok, illetve a sok adaton ugyanolyan műveletet egyidőben elvégezni képes grafikus processzorok (GPU) jól kihasználhatók volnának itt.
+A fő motivációt ehhez a felismeréshez az adta, hogy a jobb eredmény elérése érdekében a korábbiaknál nagyobb hálózatokat szerettek volna építeni. A visszacsatolásos hálózatok, mint a konvolúciós és az LSTM azonban nagyon számításigényesek, mert az egyes lépések kevéssé párhuzamosíthatók. A sima előrecsatolásos hálózat viszont jóval egyszerűbb eset. Egyszerű vektor-mátrix szorzásból áll a számítás, amely jól szétválasztható sok vektor-vektor szorzásra. A többmagos processzorok, illetve a sok adaton ugyanolyan műveletet egyidőben elvégezni képes grafikus processzorok (GPU) jól kihasználhatók.
 
-Mindezt a Google Brain csapata valósította meg, akik a tanulmányt 2017-ben publikálták.
+Mindezt a Google Brain csapata valósította meg először, akik tanulmányukat 2017-ben publikálták.
 
 | <img src="images/JakobUszkoreit.png" height="300" /> | <img src="images/AshishVaswani.png" height="300" /> | <img src="images/IlliaPolosukhin.png" height="300" /> | <img src="images/NoamShazeer.png" height="300" /> |
 |:-----------------------------------------------------:|:---------------------------------------------------:|:-----------------------------------------------------:|:-------------------------------------------------:|
 |                    Jakob Uszkoreit                    |                   Ashish Vaswani                    |                   Illia Polosukhin                    |                   Noam Shazeer                    |
 
-Itt is enkóder-dekóder architektúrát alkalmaztak, és az attention mechanizmus lépései is megegyeztek a Bahdanau-attention lépéseivel. Annyi fejlesztés történt ebben a tekintetben, hogy bevezettek egy self-attention lépést is.
+Itt is enkóder-dekóder architektúrát alkalmaztak, és az attention mechanizmus is megegyezett a Bahdanau-attention lépéseivel, de bevezették a self-attention nevű újítást is.
 
 Az eredeti Bahnadau-attention a dekóderben működött, ahol az volt a feladata, hogy az enkóder által eltárolt sok vektor közül kiválassza a szerinte legfontosabbakat, és azt a néhányat használja csak, amire érdemes figyelmet fordítani. (Mindet nem használhatja, mert nem fér bele az egész egyetlen vektorba.) Ez tehát a dekóderben működő figyelem volt, ami az enkóder adataira figyelt. Nem önmagára, hanem egy másik részegységre.
 
-A Transformerben is van egy pontosan ugyanilyen lépés. De emellett pluszban az enkóderben és a dekóderben is van egy self-attention lépés, vagyis önmagára való figyelés. Ilyenkor az enkóder azon adatokra figyel (azokat használja), melyeket saját maga tárolt el a többi tokenről. És a dekóder is ugyanezt csinálja, a saját maga által eltárolt adatok alapján.
+A Transformerben is van egy pontosan ugyanilyen lépés. De emellett pluszban az enkóderben és a dekóderben is van egy self-attention lépés, vagyis önmagára való figyelés. Ilyenkor az enkóder azon adatokra figyel (azokat használja), melyeket saját maga tárolt el a többi tokenről; és a dekóder is ugyanezt csinálja, a saját maga által eltárolt adatokat használva.
 
-Így aztán nincs szükség arra, hogy az enkóder kimenetét a következő lépésben újra beadjuk a bemeneten. Ez a visszacsatolás ki lett véve a rendszerből. És a dekóder oldalon sincs rá szükség.
+A self-attention miatt nincs szükség arra, hogy az enkóder kimenetét a következő lépésben újra beadjuk a bemeneten. Ez a visszacsatolás ki lett véve a rendszerből. (A dekóder oldalon szintén nincs erre szükség.)
 
 | <img src="images/TransformerEncoderDecoder.png" height="400" /> |
 |:---------------------------------------------------------------:|
 |                           Transformer                           |
 
 
-Hasonló maradt a feldolgozás sorrendje. Tehát a bemenő szavakat egyesével beadtuk az enkódernek. De az újabb és újabb menetek nem mosták ki a korábbiakat, minden el lett tárolva. És minden menet figyelni tudott az addig beadott szavakra. De csak azokra fókuszált, amik szerinte ebből fontosak voltak.
+Hasonló maradt a feldolgozás sorrendje, tehát a bemenő szavakat egyesével beadtuk az enkódernek. De az újabb és újabb menetek nem mosták ki a korábbiakat, mert a közbülső feldolgozási eredmények mind el lettek tárolva. Minden feldolgozási lépés során elérhető volt minden korábbi eredmény, de a hálózat ezek közül mindig csak azokra fókuszált, amik szerinte ezek közül a legfontosabbak voltak.
 
-A dekódert is hasonló iterációval használtuk újra és újra. Beadva neki az előző kimenetet bemenetként. De megintcsak megvolt minden korábbi feldolgozásról minden szükséges információ hagyományos módon eltárolva, és azok közül szemezgetve, súlyozva fel lehetett használni bármelyiket.
+A dekódert is hasonló iterációval használták, bemenetként az előző kimenetet betáplálva. (Ahol ugyanúgy megvolt minden korábbi menetből a feldolgozási eredmény.)
 
-Az attention mechanizmusban szerepelt egy további fejlesztés is, a multi-head megoldás. De ennek oka csak a jobb párhuzamosíthatóság volt.
+Az attention mechanizmusban szerepelt egy további fejlesztés is, a multi-head megoldás, de ennek előnye csupán a jobb párhuzamosíthatóság volt, így nagyobb hálózatot volt képes kiszámítani a gép.
 
 A Google Brain részleg fél év múlva előrukkolt egy módosított Transformerrel, amelyet már nem fordításra fejlesztettek, hanem egyszerűen csak a szöveg folytatására. Itt tehát nem volt szükség enkóderre és dekóderre is, elég volt egyetlen komponens. (Ezt dekódernek hívják, de tulajdonképpen ellátja az enkóder funkciót is: feldolgozza a bemenetet. Sőt, igazából az enkóder szerkezetével egyezik meg, mert csak self-attention van benne, hisz nincs is másik komponens, amire irányulhatna a figyelem.)
 
@@ -39,9 +39,7 @@ A Google Brain részleg fél év múlva előrukkolt egy módosított Transformer
 
 A csak dekóderes változatot természetesen nem egy nyelvpárra tanították be, hanem a következő szót (tokent) kellett mindig megtippelnie. 
 
-A megoldás mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. (A csak dekóderes változat 2018. január végén jelent meg, 2018. júniusában pedig kész lett a GPT-1, kompletten letesztelve, tanulmányozva, publikációstul. Persze nem olyan nagy csoda, mert a csapatban volt a már tapasztalt Sutskever is.)   
-
-Ilyenkor szokás azt mondani, hogy "a többi történelem". Nem tudom miért, mert a korábbiak is azok voltak, a többi meg ahhoz képest inkább a jelen. :-) De valahogy mégis ide passzol. Szóval a többi történelem. 2019-ben kijött a GPT-2. 2020-ban a GPT-3, majd a következő évben annak jobban betanított, instrukciókra jobban reagáló változata. 2022. vége felé a ChatGPT. (Ez is csak betanításban fejlődött.) 2023. márciusában pedig megjelent a GPT-4.  
+A megoldás mindenkinek felkeltette az érdeklődését, így az OpenAI is azonnal nekilátott, hogy lemásolja a csak dekóderes Transformert. Az eredeti csak dekóderes változat 2018. január végén jelent meg, 2018. júniusában pedig kész lett a GPT-1. 2019-ben kijött a GPT-2, majd 2020-ban a GPT-3, melyek lényegében ugyanolyan architektúrájúak, csak egyre nagyobbak. 2021-ben készítették el a GPT-3 tanítással finomhangolt, instrukciókra jobban reagáló változatét, majd 2022. októberében elérhetővé tettek ennek frissített verzióját, a ChatGPT-t. 2023. márciusában jelent meg a GPT-4, amely már multimodális, és lényegében több GPT együttműködése zajlik benne. 2024-re már a GPT-k óriási választékát kínálja számtalan vállalkozás, melyek közt vannak fizetős és ingyen is szabadon elérhető rendszerek is.
 
 <img src="images/OpenAI-GPT.png" width="900" height="200"/>
 
